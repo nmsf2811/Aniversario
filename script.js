@@ -1,6 +1,6 @@
 // Cola aqui o endereço do Google Apps Script (termina em /exec). Ver apps-script.gs.
 // Enquanto estiver vazio, a resposta não é guardada em lado nenhum.
-const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbx56MXFDqP0SobIVbJx--Li7WM1CsjujF3r4rtAxLc3ZTMHGWeZ37UPuw9Tawy5qhuOGw/exec";
+const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbywu4DhIRTYGqGiGkiZRlT1IEtpZcKiHxcYGg37V1uMUcYTVUH7_QoQvU6NaKcFrLZ7Iw/exec";
 
 // Para tirar uma foto, apaga o nome daqui. Para pôr outra, mete o ficheiro em img/ e acrescenta o nome.
 const PHOTOS = [
