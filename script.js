@@ -180,7 +180,6 @@ const EVENTS = [
     inicio: "2026-11-28T20:00", mapa: "https://maps.app.goo.gl/W6hL18t5kCY65zv19" },
 ];
 const DURACAO_H = 3;
-const jantarGrande = EVENTS.find((e) => e.id === "sabado_jantar");
 
 // lista de programas no 2.º passo
 const evList = $("evList");
@@ -199,11 +198,6 @@ EVENTS.forEach((ev) => {
   lab.append(inp, box);
   evList.appendChild(lab);
 });
-
-// caixa do jantar principal (sempre visível no fim)
-$("whenDay").textContent = "Sábado, 28 de novembro · " + jantarGrande.hora;
-$("whenPlace").textContent = jantarGrande.local;
-$("whenMap").href = jantarGrande.mapa;
 
 // ficheiro de calendário (.ics) com os programas escolhidos
 const pad = (n) => String(n).padStart(2, "0");
