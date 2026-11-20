@@ -244,7 +244,14 @@ const evErr = $("evErr");
 const evs = [...document.querySelectorAll('input[name="ev"]')];
 evs.forEach((c) => c.addEventListener("change", () => (evErr.textContent = "")));
 const acomps = [...document.querySelectorAll('input[name="acomp"]')];
-acomps.forEach((c) => c.addEventListener("change", () => (evErr.textContent = "")));
+const acompNome = $("acompNome");
+acomps.forEach((c) => c.addEventListener("change", () => {
+  evErr.textContent = "";
+  const sim = acomps.some((x) => x.checked && x.value === "Sim");
+  acompNome.classList.toggle("on", sim);
+  if (sim) acompNome.focus({ preventScroll: true });
+}));
+acompNome.addEventListener("input", () => (evErr.textContent = ""));
 let escolhidosEv = [];
 $("calBtn").addEventListener("click", () => baixarCalendario(escolhidosEv));
 
@@ -261,6 +268,12 @@ $("confirm").addEventListener("click", () => {
     evErr.textContent = "Diz-nos se trazes acompanhante";
     return;
   }
+  const quemAcomp = acompNome.value.trim();
+  if (acomp === "Sim" && !quemAcomp) {
+    evErr.textContent = "Escreve o nome do acompanhante";
+    acompNome.focus({ preventScroll: true });
+    return;
+  }
   $("msg").textContent = "Combinado, " + quem + "! Vai ser épico.";
   const lista = $("doneList");
   lista.innerHTML = "";
@@ -274,7 +287,7 @@ $("confirm").addEventListener("click", () => {
   });
   if (acomp === "Sim") {
     const p = document.createElement("p");
-    p.textContent = "Com acompanhante";
+    p.textContent = "Com acompanhante: " + quemAcomp;
     lista.appendChild(p);
   }
   card.classList.remove("step2");
@@ -292,6 +305,7 @@ $("confirm").addEventListener("click", () => {
         sabado_almoco: ids.includes("sabado_almoco"),
         sabado_jantar: ids.includes("sabado_jantar"),
         acompanhante: acomp,
+        nome_acompanhante: acomp === "Sim" ? quemAcomp : "",
         quando: new Date().toISOString(),
       }),
     }).catch(() => {});

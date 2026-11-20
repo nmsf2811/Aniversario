@@ -106,3 +106,7 @@ body{overflow:hidden}
 .yn span{display:block;text-align:center;border:1.5px solid #c9d3cc;border-radius:999px;background:#fff;padding:10px 0;font:500 14px/1 Inter,system-ui,sans-serif;color:var(--ink);transition:background .15s,border-color .15s}
 .yn input:checked + span{background:#e9f6df;border-color:var(--green);color:var(--green)}
 .yn input:focus-visible + span{outline:3px solid var(--lime);outline-offset:2px}
+
+#acompNome{display:none;width:min(100%,310px);height:40px;margin:8px auto 0;border-radius:999px;border:1.5px solid #c9d3cc;background:#fff;padding:0 16px;text-align:center;font:400 14px/1 Inter,system-ui,sans-serif;color:var(--ink)}
+#acompNome.on{display:block}
+#acompNome:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(126,224,43,.35)}
