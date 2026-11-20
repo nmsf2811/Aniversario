@@ -39,6 +39,23 @@
     <div class="slot"><button type="button" class="opt runaway" id="o1">Jantar de sexta</button></div>
     <div class="slot"><button type="button" class="opt runaway" id="o2">Jantar de sábado</button></div>
     <div class="slot"><button type="button" class="opt" id="yes">Puta o fim de semana a dentro</button></div>
+
+    <div id="step2">
+      <p class="qsub">Escolhe tudo a que vais</p>
+      <div id="evList"></div>
+      <p id="evErr" role="alert"></p>
+      <button type="button" id="confirm">Confirmar</button>
+    </div>
+
+    <div id="done">
+      <div id="doneList"></div>
+      <div class="when">
+        <small>Jantar</small>
+        <b id="whenDay"></b>
+        <span id="whenPlace"></span> · <a id="whenMap" href="#" target="_blank" rel="noopener">ver no mapa</a>
+      </div>
+      <button type="button" id="calBtn">Adicionar ao calendário</button>
+    </div>
   </section>
 </main>
 <script src="script.js"></script>

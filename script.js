@@ -35,12 +35,15 @@ function layout() {
   const cx = VW / 2, cy = VH / 2;
   stage.style.height = VH + "px";
   const cardBox = { x1: cx - cw / 2, x2: cx + cw / 2, y1: cy - ch / 2, y2: cy + ch / 2 };
-  const maxCard = small() ? 0.65 : 0.3;   // quanto de cada foto pode ficar escondido atrás do cartão
-  const maxPhoto = 0.22;                  // quanto de cada foto pode ser tapado por outra foto
+  // por defeito: no máx. 22% de cada foto tapada por outra, e 30% (65% no telemóvel) atrás do cartão
   const base = small() ? 110 : 150;
   const order = PHOTOS.map((f) => ({ f, k: rnd() })).sort((a, b) => a.k - b.k).map((o) => o.f);
 
   let placed = null;
+  // se não couber, vai-se tolerando um pouco mais de sobreposição, nunca deixa de aparecer
+  for (const relax of [1, 1.6, 2.6, 4, 99]) {
+  const maxPhoto = Math.min(relax === 99 ? 1 : 0.8, 0.22 * relax);
+  const maxCard = relax === 99 ? 1 : Math.min(0.92, (small() ? 0.65 : 0.3) * relax);
   for (let s = 1; s >= 0.3 && !placed; s -= 0.04) {
     const boxes = [], out = [];
     let ok = true;
@@ -66,6 +69,8 @@ function layout() {
       out.push({ f, w, x: best.x, y: best.y });
     }
     if (ok) placed = out;
+  }
+  if (placed) break;
   }
 
   pols.innerHTML = "";
@@ -159,20 +164,128 @@ yes.addEventListener("click", () => {
     nameIn.focus({ preventScroll: true });
     return;
   }
+  // 2.º passo: escolher a que programas vai
+  $("msg").textContent = "Boa, " + quem + "!";
+  card.classList.add("step2");
+});
+
+// 3.º passo: programas, confirmar, guardar e mostrar a informação
+// Horas em Lisboa (em novembro = UTC+0). Para mudar uma hora, altera "inicio" (ano-mês-diaThora:min) e "hora".
+const EVENTS = [
+  { id: "sexta_jantar", dia: "Sexta, 27", hora: "21h", titulo: "Jantar na Taska da Txika e noitinha", local: "Taska da Txika",
+    inicio: "2026-11-27T21:00", mapa: "https://maps.app.goo.gl/9QCzX3ZYV1GHSjaq9" },
+  { id: "sabado_almoco", dia: "Sábado, 28", hora: "13h", titulo: "Almoço na Dona Maria e tardinha", local: "Dona Maria",
+    inicio: "2026-11-28T13:00", mapa: "https://maps.app.goo.gl/3itzqi2MAzBtBFu56" },
+  { id: "sabado_jantar", dia: "Sábado, 28", hora: "20h", titulo: "Jantar no Lucimar Gemini e noitar", local: "Lucimar Gemini",
+    inicio: "2026-11-28T20:00", mapa: "https://maps.app.goo.gl/W6hL18t5kCY65zv19" },
+];
+const DURACAO_H = 3;
+const jantarGrande = EVENTS.find((e) => e.id === "sabado_jantar");
+
+// lista de programas no 2.º passo
+const evList = $("evList");
+EVENTS.forEach((ev) => {
+  const lab = document.createElement("label");
+  lab.className = "ev";
+  const inp = document.createElement("input");
+  inp.type = "checkbox"; inp.name = "ev"; inp.value = ev.id;
+  const box = document.createElement("span");
+  box.className = "evb";
+  const small = document.createElement("small");
+  small.textContent = ev.dia + " · " + ev.hora;
+  const b = document.createElement("b");
+  b.textContent = ev.titulo;
+  box.append(small, b);
+  lab.append(inp, box);
+  evList.appendChild(lab);
+});
+
+// caixa do jantar principal (sempre visível no fim)
+$("whenDay").textContent = "Sábado, 28 de novembro · " + jantarGrande.hora;
+$("whenPlace").textContent = jantarGrande.local;
+$("whenMap").href = jantarGrande.mapa;
+
+// ficheiro de calendário (.ics) com os programas escolhidos
+const pad = (n) => String(n).padStart(2, "0");
+const icsData = (iso, plusH = 0) => {
+  const d = new Date(iso + ":00Z"); // hora de Lisboa = UTC em novembro
+  d.setUTCHours(d.getUTCHours() + plusH);
+  return d.getUTCFullYear() + pad(d.getUTCMonth() + 1) + pad(d.getUTCDate()) + "T" + pad(d.getUTCHours()) + pad(d.getUTCMinutes()) + "00Z";
+};
+function baixarCalendario(lista) {
+  const agora = icsData(new Date().toISOString().slice(0, 16));
+  const linhas = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Aniversario do Nuno//PT", "CALSCALE:GREGORIAN"];
+  lista.forEach((ev) => {
+    linhas.push(
+      "BEGIN:VEVENT",
+      "UID:" + ev.id + "-2026@aniversario-nuno",
+      "DTSTAMP:" + agora,
+      "DTSTART:" + icsData(ev.inicio),
+      "DTEND:" + icsData(ev.inicio, DURACAO_H),
+      "SUMMARY:Aniversário do Nuno · " + ev.titulo,
+      "LOCATION:" + ev.local,
+      "DESCRIPTION:" + ev.titulo + "\n" + ev.mapa,
+      "URL:" + ev.mapa,
+      "END:VEVENT"
+    );
+  });
+  linhas.push("END:VCALENDAR");
+  const blob = new Blob([linhas.join("\r\n")], { type: "text/calendar;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "aniversario-nuno.ics";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+const evErr = $("evErr");
+const evs = [...document.querySelectorAll('input[name="ev"]')];
+evs.forEach((c) => c.addEventListener("change", () => (evErr.textContent = "")));
+let escolhidosEv = [];
+$("calBtn").addEventListener("click", () => baixarCalendario(escolhidosEv));
+
+$("confirm").addEventListener("click", () => {
+  const quem = nameIn.value.trim();
+  const ids = evs.filter((c) => c.checked).map((c) => c.value);
+  escolhidosEv = EVENTS.filter((e) => ids.includes(e.id));
+  if (!escolhidosEv.length) {
+    evErr.textContent = "Escolhe pelo menos um programa";
+    return;
+  }
   $("msg").textContent = "Combinado, " + quem + "! Vai ser épico.";
-  card.classList.add("thanks");
+  const lista = $("doneList");
+  lista.innerHTML = "";
+  escolhidosEv.forEach((ev) => {
+    const p = document.createElement("p");
+    p.append(ev.dia + " · " + ev.hora + " — " + ev.titulo + " ");
+    const a = document.createElement("a");
+    a.href = ev.mapa; a.target = "_blank"; a.rel = "noopener"; a.textContent = "mapa";
+    p.appendChild(a);
+    lista.appendChild(p);
+  });
+  card.classList.remove("step2");
+  card.classList.add("done");
   confetti();
   if (RSVP_ENDPOINT) {
     fetch(RSVP_ENDPOINT, {
       method: "POST",
       mode: "no-cors", // o Google Apps Script não responde a CORS; o pedido chega na mesma
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ nome: quem, resposta: "fim de semana inteiro", quando: new Date().toISOString() }),
+      body: JSON.stringify({
+        nome: quem,
+        resposta: escolhidosEv.map((e) => e.dia + " " + e.hora + ": " + e.titulo).join(" | "),
+        sexta_jantar: ids.includes("sexta_jantar"),
+        sabado_almoco: ids.includes("sabado_almoco"),
+        sabado_jantar: ids.includes("sabado_jantar"),
+        quando: new Date().toISOString(),
+      }),
     }).catch(() => {});
   }
 });
 
 (document.fonts ? Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1200))]) : Promise.resolve()).then(() => {
-  layout();
+  try { layout(); } catch (e) { console.error(e); }
   play();
 });

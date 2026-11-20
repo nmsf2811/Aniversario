@@ -59,6 +59,33 @@ body{overflow:hidden}
 
 .thanks #sub,.thanks .slot{display:none}
 
+#step2,#done{display:none}
+.step2 #sub,.step2 #namebox,.step2 .slot,.done #sub,.done #namebox,.done .slot{display:none}
+.step2 #step2{display:block}
+.done #done{display:block}
+.qsub{font-size:13px;color:#5b6b62;margin:0 0 8px}
+.ev{display:block;margin:7px auto 0;width:min(100%,310px);cursor:pointer;text-align:left}
+.ev input{position:absolute;opacity:0;pointer-events:none}
+.evb{display:block;border:1.5px solid #c9d3cc;border-radius:12px;background:#fff;padding:8px 12px 8px 40px;position:relative;transition:background .15s,border-color .15s}
+.evb::before{content:"";position:absolute;left:12px;top:50%;width:18px;height:18px;margin-top:-9px;border-radius:50%;border:1.5px solid #9fb0a6;background:#fff}
+.evb small{display:block;font-size:11px;color:#5b6b62;text-transform:uppercase;letter-spacing:.04em}
+.evb b{display:block;font-weight:500;font-size:14px;color:var(--ink);line-height:1.25}
+.ev input:checked + .evb{background:#e9f6df;border-color:var(--green)}
+.ev input:checked + .evb::before{background:var(--green);border-color:var(--green);box-shadow:inset 0 0 0 3px #fff}
+.ev input:focus-visible + .evb{outline:3px solid var(--lime);outline-offset:2px}
+#evErr{font-size:12px;color:#b3261e;margin:6px 0 0}
+#evErr:empty{display:none}
+#confirm{display:block;margin:12px auto 0;width:min(100%,290px);height:44px;border-radius:999px;border:1.5px solid var(--green);background:var(--green);color:#fff;font:500 14px/1 Inter,system-ui,sans-serif;cursor:pointer}
+#confirm:hover{background:#0b8a47}
+#confirm:focus-visible{outline:3px solid var(--lime);outline-offset:2px}
+#doneList{text-align:left;margin:6px auto 0;width:min(100%,310px);font-size:14px;line-height:1.4;color:var(--ink)}
+#doneList p{margin:2px 0;padding-left:20px;position:relative}
+#doneList p::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:500}
+.when{margin:14px auto 0;width:min(100%,310px);border:1.5px solid var(--green);background:#e9f6df;border-radius:12px;padding:10px 12px}
+.when small{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#3f5a49}
+.when b{display:block;font-family:Caveat,cursive;font-weight:600;font-size:24px;line-height:1.15;color:var(--ink)}
+.when span{font-size:15px;color:var(--green);font-weight:500}
+
 .confetti{position:fixed;top:-12px;width:9px;height:14px;z-index:100;pointer-events:none;animation:fall linear forwards}
 @keyframes fall{to{transform:translateY(112vh) rotate(720deg)}}
 
@@ -66,3 +93,8 @@ body{overflow:hidden}
 @media (prefers-reduced-motion:reduce){
   .pol,#env,#card,.el,.ef{transition-duration:.01s!important;transition-delay:0s!important}
 }
+
+#doneList a,.when a{color:var(--green);font-weight:500;text-decoration:underline;text-underline-offset:2px}
+#calBtn{display:block;margin:12px auto 0;width:min(100%,290px);height:44px;border-radius:999px;border:1.5px solid var(--green);background:#fff;color:var(--green);font:500 14px/1 Inter,system-ui,sans-serif;cursor:pointer}
+#calBtn:hover{background:#e9f6df}
+#calBtn:focus-visible{outline:3px solid var(--lime);outline-offset:2px}
