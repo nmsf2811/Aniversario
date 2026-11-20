@@ -243,6 +243,8 @@ function baixarCalendario(lista) {
 const evErr = $("evErr");
 const evs = [...document.querySelectorAll('input[name="ev"]')];
 evs.forEach((c) => c.addEventListener("change", () => (evErr.textContent = "")));
+const acomps = [...document.querySelectorAll('input[name="acomp"]')];
+acomps.forEach((c) => c.addEventListener("change", () => (evErr.textContent = "")));
 let escolhidosEv = [];
 $("calBtn").addEventListener("click", () => baixarCalendario(escolhidosEv));
 
@@ -252,6 +254,11 @@ $("confirm").addEventListener("click", () => {
   escolhidosEv = EVENTS.filter((e) => ids.includes(e.id));
   if (!escolhidosEv.length) {
     evErr.textContent = "Escolhe pelo menos um programa";
+    return;
+  }
+  const acomp = (acomps.find((c) => c.checked) || {}).value;
+  if (!acomp) {
+    evErr.textContent = "Diz-nos se trazes acompanhante";
     return;
   }
   $("msg").textContent = "Combinado, " + quem + "! Vai ser épico.";
@@ -265,6 +272,11 @@ $("confirm").addEventListener("click", () => {
     p.appendChild(a);
     lista.appendChild(p);
   });
+  if (acomp === "Sim") {
+    const p = document.createElement("p");
+    p.textContent = "Com acompanhante";
+    lista.appendChild(p);
+  }
   card.classList.remove("step2");
   card.classList.add("done");
   confetti();
@@ -279,6 +291,7 @@ $("confirm").addEventListener("click", () => {
         sexta_jantar: ids.includes("sexta_jantar"),
         sabado_almoco: ids.includes("sabado_almoco"),
         sabado_jantar: ids.includes("sabado_jantar"),
+        acompanhante: acomp,
         quando: new Date().toISOString(),
       }),
     }).catch(() => {});
