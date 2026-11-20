@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aniversário do Nuno</title>
+<meta name="description" content="Foste convidado(a) para o aniversário do Nuno">
+<meta property="og:title" content="Foste convidado(a) para o aniversário do Nuno">
+<meta property="og:image" content="img/hero.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="stage">
+  <div id="polaroids" aria-hidden="true"></div>
+
+  <div id="env" aria-hidden="true">
+    <div class="eb"></div>
+    <div class="el"></div>
+    <div class="ef"></div>
+    <div class="ep"></div>
+    <div class="seal"></div>
+  </div>
+
+  <section id="card" aria-live="polite">
+    <div class="photo"><img src="img/hero.jpg" alt="O Nuno a celebrar de braços no ar"></div>
+    <p id="who"></p>
+    <h1 id="msg">Foste convidado(a) para o aniversário do Nuno</h1>
+    <p id="sub">Escolhe uma opção</p>
+    <div id="namebox">
+      <input id="nameIn" type="text" maxlength="40" placeholder="O teu nome" autocomplete="name" aria-label="O teu nome">
+      <p id="nameErr" role="alert"></p>
+    </div>
+    <div class="slot"><button type="button" class="opt runaway" id="o1">Jantar de sexta</button></div>
+    <div class="slot"><button type="button" class="opt runaway" id="o2">Jantar de sábado</button></div>
+    <div class="slot"><button type="button" class="opt" id="yes">Puta o fim de semana a dentro</button></div>
+  </section>
+</main>
+<script src="script.js"></script>
+</body>
+</html>
